@@ -22,13 +22,13 @@ npm install
 npm start
 ```
 
-### Changes from rails init
+### Changes from rails new
 ```bash
 rails new .
 rails g scaffold todo task:string completed:boolean
-mkdir controllers/api
+mkdir app/controllers/api
 mv app/controllers/todos_controller.rb app/controllers/api/todos_controller.rb
-mkdir helpers/api
+mkdir app/helpers/api
 mv app/helpers/todos_helper.rb app/helpers/api/todos_helper.rb
 ```
 

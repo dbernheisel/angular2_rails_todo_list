@@ -69,8 +69,8 @@ export class TodosComponent implements OnInit {
     todo.editing = false;
   }
 
-  stopEditing(todo: Todo, editedTitle: string) {
-    todo.task = editedTitle;
+  stopEditing(todo: Todo, editedTask: string) {
+    todo.task = editedTask;
     todo.editing = false;
   }
 

@@ -1,31 +1,58 @@
 <h2>Todos</h2>
+
 <div class="ui fluid icon input">
-  <input class="new-todo" placeholder="New Task" autofocus="" [(ngModel)]="newTodoText" (keyup.enter)="addTodo()">
+  <input class="new-todo"
+    placeholder="New Task"
+    autofocus=""
+    [(ngModel)]="newTodoText"
+    (keyup.enter)="addTodo()">
   <i class="add circle icon"></i>
 </div>
-<div class="ui card view" *ngFor="#todo of todos">
+
+<div class="ui fluid card view" *ngFor="#todo of todos">
   <div class="content">
     <div class="header" (dblclick)="editTodo(todo)">
       <div *ngIf="!todo.editing">{{todo.task}}</div>
-      <div class="ui input" *ngIf="todo.editing">
-        <input type="text" placeholder="Task" [value]="todo.task" #editedtodo (blur)="stopEditing(todo, editedtodo.value)" (keyup.enter)="updateEditingTodo(todo, editedtodo.value)" (keyup.escape)="cancelEditingTodo(todo)">
-        <button class="ui icon orange button" (click)="cancelEditingTodo(todo)"><i class="ban icon"></i></button>
-        <button class="ui icon green button" (click)="updateEditingTodo(todo, editedtodo.value)"><i class="check circle icon"></i></button>
+      <div class="ui fluid input" *ngIf="todo.editing">
+        <input type="text"
+          placeholder="Task"
+          [value]="todo.task"
+          #editedtodo
+          (blur)="stopEditing(todo, editedtodo.value)"
+          (keyup.enter)="updateEditingTodo(todo, editedtodo.value)"
+          (keyup.escape)="cancelEditingTodo(todo)">
+        <button class="ui icon orange button"
+          (click)="cancelEditingTodo(todo)">
+          <i class="ban icon"></i>
+        </button>
+        <button class="ui icon green button"
+          (click)="updateEditingTodo(todo, editedtodo.value)">
+          <i class="check circle icon"></i>
+        </button>
       </div>
     </div>
     <div class="meta">
-      Created at: {{todo.created_at}}
+      Created at: {{todo.created_at}}<br/>
       Updated at: {{todo.updated_at}}
     </div>
     <div class="description"></div>
+
     <button class="ui icon red button" (click)="deleteTodo(todo)">
       <i class="remove circle icon"></i> Remove
     </button>
 
-    <button *ngIf="todo.completed == true" class="ui icon yellow button" [class.completed]="todo.completed == true" (click)="toggleCompletion(todo)">
+    <button
+      *ngIf="todo.completed == true"
+      class="ui icon yellow button"
+      [class.completed]="todo.completed == true"
+      (click)="toggleCompletion(todo)">
       <i class="ban icon"></i> Mark Incomplete
     </button>
-    <button *ngIf="todo.completed != true" class="ui icon green button" [class.completed]="todo.completed == true" (click)="toggleCompletion(todo)">
+
+    <button *ngIf="todo.completed != true"
+      class="ui icon green button"
+      [class.completed]="todo.completed == true"
+      (click)="toggleCompletion(todo)">
       <i class="check circle icon"></i> Mark Complete
     </button>
   </div>
