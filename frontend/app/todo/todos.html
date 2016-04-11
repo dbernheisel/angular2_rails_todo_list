@@ -1,0 +1,13 @@
+<h2>Todos</h2>
+<ul class="todos">
+  <li *ngFor="#todo of todos"
+    [class.editing]="todo === selectedTodo"
+    (click)="onSelect(todo)">
+    <span class="badge">{{todo.id}}</span> {{todo.task}}
+  </li>
+</ul>
+<div *ngIf="selectedTodo">
+  <h2>{{selectedTodo.task}}</h2>
+  <button (click)="gotoTodo()">View Todo</button>
+</div>
+<div class="error" *ngIf="errorMessage">{{errorMessage}}</div>
