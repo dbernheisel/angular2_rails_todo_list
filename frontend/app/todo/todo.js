@@ -7,7 +7,6 @@ System.register([], function(exports_1, context_1) {
         execute: function() {
             Todo = (function () {
                 function Todo(task) {
-                    this.completed = false;
                     this.editing = false;
                     this.task = task.trim();
                 }
@@ -24,6 +23,20 @@ System.register([], function(exports_1, context_1) {
                 Object.defineProperty(Todo.prototype, "id", {
                     get: function () {
                         return this._id;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Todo.prototype, "created_at", {
+                    get: function () {
+                        return this._created_at;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Todo.prototype, "updated_at", {
+                    get: function () {
+                        return this._updated_at;
                     },
                     enumerable: true,
                     configurable: true

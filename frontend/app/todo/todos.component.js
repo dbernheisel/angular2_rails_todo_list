@@ -31,6 +31,7 @@ System.register(['angular2/core', 'angular2/router', './todo.component', './todo
                 function TodosComponent(_router, _todoService) {
                     this._router = _router;
                     this._todoService = _todoService;
+                    this.newTodoText = '';
                 }
                 TodosComponent.prototype.ngOnInit = function () {
                     this.getTodos();
@@ -39,9 +40,45 @@ System.register(['angular2/core', 'angular2/router', './todo.component', './todo
                     var _this = this;
                     this._todoService.getTodos().subscribe(function (todos) { return _this.todos = todos; }, function (error) { return _this.errorMessage = error; });
                 };
-                TodosComponent.prototype.onSelect = function (todo) { this.selectedTodo = todo; };
-                TodosComponent.prototype.gotoTodo = function () {
-                    this._router.navigate(['Todo', { id: this.selectedTodo.id }]);
+                TodosComponent.prototype.editTodo = function (todo) {
+                    todo.editing = true;
+                };
+                TodosComponent.prototype.toggleCompletion = function (todo) {
+                    todo.completed = !todo.completed;
+                    this.updateTodo(todo);
+                };
+                TodosComponent.prototype.updateEditingTodo = function (todo, editedTask) {
+                    editedTask = editedTask.trim();
+                    todo.editing = false;
+                    if (editedTask.length === 0) {
+                        return this.deleteTodo(todo);
+                    }
+                    if (editedTask !== todo.task.trim()) {
+                        todo.task = editedTask;
+                        this.updateTodo(todo);
+                    }
+                };
+                TodosComponent.prototype.deleteTodo = function (todo) {
+                    var _this = this;
+                    this._todoService.deleteTodo(todo).subscribe(function (message) { return _this.todos.splice(_this.todos.indexOf(todo), 1); }, function (error) { return _this.errorMessage = error; });
+                };
+                TodosComponent.prototype.updateTodo = function (todo) {
+                    var _this = this;
+                    this._todoService.updateTodo(todo).subscribe(function (updated_todo) { return todo = updated_todo; }, function (error) { return _this.errorMessage = error; });
+                };
+                TodosComponent.prototype.cancelEditingTodo = function (todo) {
+                    todo.editing = false;
+                };
+                TodosComponent.prototype.stopEditing = function (todo, editedTitle) {
+                    todo.task = editedTitle;
+                    todo.editing = false;
+                };
+                TodosComponent.prototype.addTodo = function () {
+                    var _this = this;
+                    if (this.newTodoText.trim().length) {
+                        this._todoService.createTodo(this.newTodoText).subscribe(function (new_todo) { return _this.todos.push(new_todo); }, function (error) { return _this.errorMessage = error; });
+                        this.newTodoText = '';
+                    }
                 };
                 TodosComponent = __decorate([
                     core_1.Component({

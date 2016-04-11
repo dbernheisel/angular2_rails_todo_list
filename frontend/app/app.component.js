@@ -38,7 +38,7 @@ System.register(['angular2/core', 'angular2/router', './todo/todo.service', './t
                         selector: 'todo-app',
                         templateUrl: 'app/layout.html',
                         directives: [router_1.ROUTER_DIRECTIVES],
-                        providers: [router_1.ROUTER_PROVIDERS, todo_service_1.TodoService,]
+                        providers: [router_1.ROUTER_PROVIDERS, todo_service_1.TodoService]
                     }),
                     router_1.RouteConfig([
                         {

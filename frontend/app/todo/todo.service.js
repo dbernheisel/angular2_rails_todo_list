@@ -28,12 +28,11 @@ System.register(['angular2/http', 'angular2/core', 'rxjs/Observable', 'rxjs/Rx']
             TodoService = (function () {
                 function TodoService(http) {
                     this.http = http;
-                    this._todoUrl = 'http://localhost:3000';
+                    this._todoUrl = 'http://localhost:3000/api';
                 }
                 TodoService.prototype.getTodos = function () {
                     return this.http.get(this._todoUrl + "/todos.json")
                         .map(function (res) { return res.json(); })
-                        .do(function (data) { return console.log(data); })
                         .catch(this.handleError);
                 };
                 TodoService.prototype.getTodo = function (id) {
@@ -51,11 +50,16 @@ System.register(['angular2/http', 'angular2/core', 'rxjs/Observable', 'rxjs/Rx']
                         .catch(this.handleError);
                 };
                 TodoService.prototype.updateTodo = function (todo) {
-                    var body = JSON.stringify({ todo: { task: todo.task, completed: todo.completed } });
-                    return this.http.put(this._todoUrl + "/todos/" + todo.id + ".json", body);
+                    var body = JSON.stringify({ todo: todo });
+                    var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+                    var options = new http_1.RequestOptions({ headers: headers });
+                    return this.http.put(this._todoUrl + "/todos/" + todo.id + ".json", body, options)
+                        .map(function (response) { return response.json(); })
+                        .catch(this.handleError);
                 };
                 TodoService.prototype.deleteTodo = function (todo) {
-                    return this.http.delete(this._todoUrl + "/todos/" + todo.id + ".json");
+                    return this.http.delete(this._todoUrl + "/todos/" + todo.id + ".json")
+                        .catch(this.handleError);
                 };
                 TodoService.prototype.handleError = function (error) {
                     console.log(error);
