@@ -12,12 +12,11 @@ export class TodoService {
 
   constructor(private http: Http) { }
 
-  private _todoUrl = 'http://localhost:3000';
+  private _todoUrl = 'http://localhost:3000/api';
 
   getTodos() {
     return this.http.get(`${this._todoUrl}/todos.json`)
       .map(res => <Todo[]>res.json())
-      .do(data => console.log(data))
       .catch(this.handleError);
   }
 
@@ -28,7 +27,7 @@ export class TodoService {
       .catch(this.handleError);
   }
 
-  createTodo(task: string) : Observable<Todo> {
+  createTodo(task: string) {
     let body = JSON.stringify({ todo: { task: task } });
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
@@ -38,12 +37,17 @@ export class TodoService {
   }
 
   updateTodo(todo:Todo) {
-    let body = JSON.stringify({ todo: { task: todo.task, completed: todo.completed } });
-    return this.http.put(`${this._todoUrl}/todos/${todo.id}.json`, body)
+    let body = JSON.stringify({ todo: todo });
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    return this.http.put(`${this._todoUrl}/todos/${todo.id}.json`, body, options)
+      .map(response => <Todo>response.json())
+      .catch(this.handleError);
   }
 
   deleteTodo(todo: Todo) {
     return this.http.delete(`${this._todoUrl}/todos/${todo.id}.json`)
+      .catch(this.handleError);
   }
 
   private handleError(error: Response) {

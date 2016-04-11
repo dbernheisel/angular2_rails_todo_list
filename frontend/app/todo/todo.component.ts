@@ -1,4 +1,4 @@
-import {Component} from 'angular2/core';
+import {Component, Input, OnInit} from 'angular2/core';
 import {RouteParams} from 'angular2/router';
 import {Http, HTTP_PROVIDERS} from 'angular2/http';
 
@@ -11,11 +11,20 @@ import {TodoService} from './todo.service';
 })
 
 export class TodoComponent {
-  // todoStore: TodoStore;
+  @Input() todo: Todo;
+  errorMessage: string;
   newTodoText = '';
 
   constructor(
-    private _todoService: TodoService) { }
+    private _todoService: TodoService,
+    private _routeParams: RouteParams) { }
+
+  ngOnOnit() {
+    let id = +this._routeParams.get('id');
+    this._todoService.getTodo(id).subscribe(
+       todo => this.todo = todo,
+       error => this.errorMessage = <any>error);
+  }
 
   stopEditing(todo: Todo, editedTask: string) {
     todo.task = editedTask;
@@ -34,6 +43,7 @@ export class TodoComponent {
       return this._todoService.deleteTodo(todo);
     }
 
+    this._todoService.updateTodo(todo);
     todo.task = editedTask;
   }
 
@@ -41,21 +51,17 @@ export class TodoComponent {
     todo.editing = true;
   }
 
-  removeCompleted() {
-    this._todoService.removeCompleted();
-  }
-
   toggleCompletion(todo: Todo) {
     this._todoService.toggleCompletion(todo);
   }
 
   remove(todo: Todo) {
-    this._todoService.remove(todo);
+    this._todoService.deleteTodo(todo);
   }
 
   addTodo() {
     if (this.newTodoText.trim().length) {
-      this._todoService.add(this.newTodoText);
+      this._todoService.createTodo(this.newTodoText);
       this.newTodoText = '';
     }
   }

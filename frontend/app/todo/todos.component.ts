@@ -15,7 +15,7 @@ import {TodoService} from './todo.service';
 export class TodosComponent implements OnInit {
   errorMessage: string;
   todos: Todo[];
-  selectedTodo: Todo;
+  newTodoText = '';
 
   constructor(
     private _router: Router,
@@ -31,9 +31,56 @@ export class TodosComponent implements OnInit {
        error => this.errorMessage = <any>error);
   }
 
-  onSelect(todo: Todo) { this.selectedTodo = todo; }
-
-  gotoTodo() {
-    this._router.navigate(['Todo', { id: this.selectedTodo.id }]);
+  editTodo(todo: Todo) {
+    todo.editing = true;
   }
+
+  toggleCompletion(todo: Todo) {
+    todo.completed = !todo.completed;
+    this.updateTodo(todo);
+  }
+
+  updateEditingTodo(todo: Todo, editedTask: string) {
+    editedTask = editedTask.trim();
+    todo.editing = false;
+
+    if (editedTask.length === 0) {
+      return this.deleteTodo(todo);
+    }
+    if (editedTask !== todo.task.trim()){
+      todo.task = editedTask;
+      this.updateTodo(todo)
+    }
+  }
+
+  deleteTodo(todo: Todo) {
+    this._todoService.deleteTodo(todo).subscribe(
+      message => this.todos.splice(this.todos.indexOf(todo), 1),
+      error => this.errorMessage = <any>error);
+  }
+
+  updateTodo(todo: Todo) {
+    this._todoService.updateTodo(todo).subscribe(
+      updated_todo => todo = updated_todo,
+      error => this.errorMessage = <any>error);
+  }
+
+  cancelEditingTodo(todo: Todo) {
+    todo.editing = false;
+  }
+
+  stopEditing(todo: Todo, editedTitle: string) {
+    todo.task = editedTitle;
+    todo.editing = false;
+  }
+
+  addTodo() {
+    if (this.newTodoText.trim().length) {
+      this._todoService.createTodo(this.newTodoText).subscribe(
+        new_todo => this.todos.push(new_todo),
+        error => this.errorMessage = <any>error);
+      this.newTodoText = '';
+    }
+  }
+
 }

@@ -1,13 +1,33 @@
 <h2>Todos</h2>
-<ul class="todos">
-  <li *ngFor="#todo of todos"
-    [class.editing]="todo === selectedTodo"
-    (click)="onSelect(todo)">
-    <span class="badge">{{todo.id}}</span> {{todo.task}}
-  </li>
-</ul>
-<div *ngIf="selectedTodo">
-  <h2>{{selectedTodo.task}}</h2>
-  <button (click)="gotoTodo()">View Todo</button>
+<div class="ui fluid icon input">
+  <input class="new-todo" placeholder="New Task" autofocus="" [(ngModel)]="newTodoText" (keyup.enter)="addTodo()">
+  <i class="add circle icon"></i>
+</div>
+<div class="ui card view" *ngFor="#todo of todos">
+  <div class="content">
+    <div class="header" (dblclick)="editTodo(todo)">
+      <div *ngIf="!todo.editing">{{todo.task}}</div>
+      <div class="ui input" *ngIf="todo.editing">
+        <input type="text" placeholder="Task" [value]="todo.task" #editedtodo (blur)="stopEditing(todo, editedtodo.value)" (keyup.enter)="updateEditingTodo(todo, editedtodo.value)" (keyup.escape)="cancelEditingTodo(todo)">
+        <button class="ui icon orange button" (click)="cancelEditingTodo(todo)"><i class="ban icon"></i></button>
+        <button class="ui icon green button" (click)="updateEditingTodo(todo, editedtodo.value)"><i class="check circle icon"></i></button>
+      </div>
+    </div>
+    <div class="meta">
+      Created at: {{todo.created_at}}
+      Updated at: {{todo.updated_at}}
+    </div>
+    <div class="description"></div>
+    <button class="ui icon red button" (click)="deleteTodo(todo)">
+      <i class="remove circle icon"></i> Remove
+    </button>
+
+    <button *ngIf="todo.completed == true" class="ui icon yellow button" [class.completed]="todo.completed == true" (click)="toggleCompletion(todo)">
+      <i class="ban icon"></i> Mark Incomplete
+    </button>
+    <button *ngIf="todo.completed != true" class="ui icon green button" [class.completed]="todo.completed == true" (click)="toggleCompletion(todo)">
+      <i class="check circle icon"></i> Mark Complete
+    </button>
+  </div>
 </div>
 <div class="error" *ngIf="errorMessage">{{errorMessage}}</div>

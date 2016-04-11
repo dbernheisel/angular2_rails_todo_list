@@ -11,7 +11,7 @@ import { TodosComponent }   from './todo/todos.component';
     selector: 'todo-app',
     templateUrl: 'app/layout.html',
     directives: [ROUTER_DIRECTIVES],
-    providers: [ROUTER_PROVIDERS, TodoService, ]
+    providers: [ROUTER_PROVIDERS, TodoService]
 })
 
 @RouteConfig([

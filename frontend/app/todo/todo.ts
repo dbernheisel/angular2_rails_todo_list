@@ -4,6 +4,8 @@ export class Todo {
   private _task: String;
   private _completed: Boolean;
   private _id: Number;
+  private _created_at: String;
+  private _updated_at: String;
 
   get task() {
     return this._task;
@@ -17,6 +19,14 @@ export class Todo {
     return this._id;
   }
 
+  get created_at() {
+    return this._created_at;
+  }
+
+  get updated_at() {
+    return this._updated_at;
+  }
+
   get completed() {
     return this._completed;
   }
@@ -26,7 +36,6 @@ export class Todo {
   }
 
   constructor(task: String) {
-    this.completed = false;
     this.editing = false;
     this.task = task.trim();
   }
