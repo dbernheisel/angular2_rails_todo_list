@@ -1,7 +1,35 @@
-# Ruby Spin-up
+# Angular 2 frontend with Rails backend
+
+## Requirements
+1. Node `brew install node`
+2. NPM `npm install npm -g`
+3. rbenv `brew install rbenv ruby-build`
+4. ruby 2.3.0 installed `rbenv install 2.3.0`
+5. Bundler gem installed `gem install bundler`
+
+## Get running
+```bash
+git clone https://github.com/dbernheisel/angular2_rails_todo_list.git
+cd angular2_rails_todo_list
+bundle install
+rake db:create
+rake db:migrate
+rake db:seed
+rails s
+# open a new terminal window or tab
+cd frontend
+npm install
+npm start
+```
+
+### Changes from rails init
 ```bash
 rails new .
 rails g scaffold todo task:string completed:boolean
+mkdir controllers/api
+mv app/controllers/todos_controller.rb app/controllers/api/todos_controller.rb
+mkdir helpers/api
+mv app/helpers/todos_helper.rb app/helpers/api/todos_helper.rb
 ```
 
 ```ruby
@@ -16,12 +44,29 @@ rake db:migrate
 
 ```ruby
 # application_controller.rb
+# we're going to do an API-only approach.
+# I purposely avoided API-mode for Rails 5 for now.
 protect_from_forgery with: :null_session
 
+# todos_controller.rb
+# wrap entire controller in Api module.
+module Api
+  ...
+end
+
+# todos_helper.rb
+# wrap entire helper in Api module.
+module Api
+  ...
+end
+
 # routes.rb
-resources :todos, except: [:new, :edit]
+namespace :api do
+  resources :todos, except: [:new, :edit]
+end
 
 # todos_controller.rb
+# render json in appropriate places.
 render json: @todo
 render json: @todos
 render json: error messages
@@ -33,7 +78,7 @@ rake db:seed
 rails s
 ```
 
-# Angular 2 Spin-up
+### Angular 2 spin-up
 ```json
 // package.json
 // Tells NPM what to install, where things are, and how/what to run
@@ -90,8 +135,8 @@ rails s
 
 ```json
 // typings.json
-// Like a Gemfile, this gives some dependencies
-// In this case, we want the es6-shim, and a test library
+// Like a Gemfile for Ruby but for TypeScript
+// Like a Package.json for Node but for TypeScript
 {
   "ambientDependencies": {
     "es6-shim": "github:DefinitelyTyped/DefinitelyTyped/es6-shim/es6-shim.d.ts#7de6c3dd94feaeb21f20054b9f30d5dabc5efabd",
@@ -112,47 +157,10 @@ rails s
 npm install
 ```
 
-```html
-<!-- Setup our Angular2 view, and import all the Angular2 libraries -->
-<!-- See here for the instruction -->
-<!-- https://angular.io/docs/ts/latest/quickstart.html -->
-<!doctype html>
-<html lang="en" data-framework="angular2">
-  <head>
-    <title>TODO List - Angular 2 Front with Rails Back</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
-
-    <!-- 1. Load libraries -->
-    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
-    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
-    <script src="node_modules/angular2/es6/dev/src/testing/shims_for_IE.js"></script>
-
-    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
-    <script src="node_modules/systemjs/dist/system.src.js"></script>
-    <script src="node_modules/rxjs/bundles/Rx.js"></script>
-    <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
-
-    <!-- 2. Configure SystemJS -->
-    <script>
-      System.config({
-        packages: {
-          app: {
-            format: 'register',
-            defaultExtension: 'js'
-          }
-        }
-      });
-      System.import('app/main')
-            .then(null, console.error.bind(console));
-    </script>
-  </head>
-
-  <!-- 3. Display the application -->
-  <body>
-    <todo-app>Loading...</todo-app>
-  </body>
-</html>
+Later I added Semantic UI via `npm install semantic --save`
+```bash
+cd frontend/semantic
+gulp build 
 ```
 
 

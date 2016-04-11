@@ -27,4 +27,4 @@
   Todo.create!(task: t)
 end
 
-Todo.first.update(completed: true)
+Todo.find(9).update(completed: true)
